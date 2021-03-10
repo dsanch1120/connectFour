@@ -1,14 +1,64 @@
 class Board:
 
-    def __init__(self, state):
+    def __init__(self, state, player):
         self.gameBoard = state
+        self.player = player
         self.player1Score = 0
         self.player2Score = 0
-        self.score = self.getScore()
         self.getPlayerScore()
+        self.score = self.getScore()
+
+    # Checks number of free spaces around a given location
+    def freeSpaces(self, x, y):
+
+        emptySpaces = 0
+        if x > 0:
+            if self.gameBoard[x - 1][y] == '0':
+                emptySpaces += 1
+        if x < 5:
+            if self.gameBoard[x + 1][y] == '0':
+                emptySpaces += 1
+        if y > 0:
+            if self.gameBoard[x][y - 1] == '0':
+                emptySpaces += 1
+        if y < 6:
+            if self.gameBoard[x][y + 1] == '0':
+                emptySpaces += 1
+        if (x > 0) and (y > 0):
+            if self.gameBoard[x - 1][y - 1] == '0':
+                emptySpaces += 1
+        if (x < 5) and (y > 0):
+            if self.gameBoard[x + 1][y - 1] == '0':
+                emptySpaces += 1
+        if (x > 0) and (y < 6):
+            if self.gameBoard[x - 1][y + 1] == '0':
+                emptySpaces += 1
+        if (x < 5) and (y < 6):
+            if self.gameBoard[x + 1][y + 1] == '0':
+                emptySpaces += 1
+        return emptySpaces
 
     def getScore(self):
-        return 0
+        output = 0
+        # The current score of both players will impact the score
+        output += (self.player1Score * 5)
+        output -= (self.player2Score * 5)
+
+        # Checks itself (adds points to score)
+        for i in range(len(self.gameBoard)):
+            for j in range(len(self.gameBoard[i])):
+                # Checks for number of free spaces surrounding piece. Score increases by one for each
+                if self.gameBoard[i][j] == '1':
+                    output += self.freeSpaces(i, j)
+
+        # Checks opponent (subtracts points from score)
+        for i in range(len(self.gameBoard)):
+            for j in range(len(self.gameBoard[i])):
+                # Checks for number of free spaces surrounding piece. Score increases by one for each
+                if self.gameBoard[i][j] == '2':
+                    output -= self.freeSpaces(i, j)
+
+        return output
 
     def getPlayerScore(self):
         # Check horizontally
@@ -35,9 +85,14 @@ class Board:
         # Check vertically
         for j in range(7):
             # Check player 1
-            if (self.gameBoard[0][j] == '1' and self.gameBoard[1][j] == '1' and
-                    self.gameBoard[2][j] == '1' and self.gameBoard[3][j] == '1'):
-                self.player1Score += 1
+            try:
+                if (self.gameBoard[0][j] == '1' and self.gameBoard[1][j] == '1' and
+                        self.gameBoard[2][j] == '1' and self.gameBoard[3][j] == '1'):
+                    self.player1Score += 1
+            except:
+                print(j)
+                print(len(self.gameBoard))
+                print(len(self.gameBoard[0]))
             if (self.gameBoard[1][j] == '1' and self.gameBoard[2][j] == '1' and
                     self.gameBoard[3][j] == '1' and self.gameBoard[4][j] == '1'):
                 self.player1Score += 1
