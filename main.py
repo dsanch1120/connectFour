@@ -1,7 +1,10 @@
+import copy
 import os
 import sys
 from board import Board
+from node import Node
 
+visited = set()
 
 # Handles the arguments given
 def handle_args():
@@ -75,10 +78,29 @@ def generatePossibleTurns(player, board):
     return output
 
 
+def generateTree(depth, state):
+    if depth == 0:
+        return None
+    for i in generatePossibleTurns(str((state.player % 2) + 1), state.board.gameBoard):
+        n = Node(Board(copy.deepcopy(i)), (state.player % 2) + 1)
+
+        state.addChildren(n)
+        generateTree(depth - 1, n)
+    return state
+
+
+def initiate(board, startingPlayer, maxDepth):
+    iRoot = generateTree(maxDepth, Node(board, startingPlayer))
+    return iRoot
+
+
 if __name__ == '__main__':
     # args = handle_args()
-    args = ["interactive", "input1.txt", "human-next", "1"]
+    args = ["interactive", "input1.txt", "human-next", "3"]
+    if args[2].upper() == "HUMAN-NEXT":
+        args[2] = 1
+    else:
+        args[2] = 2
     b = createBoard(args[1])
-
-    generatePossibleTurns(args[3], b.gameBoard)
-
+    root = initiate(b, args[2], int(args[3]))
+    print("Program ran successfully")
