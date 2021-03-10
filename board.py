@@ -8,6 +8,12 @@ class Board:
         self.getPlayerScore()
         self.score = self.getScore()
 
+    # Given a move, updates the board
+    def updateBoard(self, move, piece):
+        for i in range(5, -1, -1):
+            if self.gameBoard[i][move] == '0':
+                self.gameBoard[i] = self.gameBoard[i][:move-1] + piece + self.gameBoard[i][move:]
+
     # Checks number of free spaces around a given location
     def freeSpaces(self, x, y):
 
@@ -38,6 +44,7 @@ class Board:
                 emptySpaces += 1
         return emptySpaces
 
+    # Gets the minimax score of the board
     def getScore(self):
         output = 0
         # The current score of both players will impact the score
@@ -60,6 +67,7 @@ class Board:
 
         return output
 
+    # Gets the player's score of the board
     def getPlayerScore(self):
         # Check horizontally
         for row in self.gameBoard:
@@ -85,14 +93,9 @@ class Board:
         # Check vertically
         for j in range(7):
             # Check player 1
-            try:
-                if (self.gameBoard[0][j] == '1' and self.gameBoard[1][j] == '1' and
-                        self.gameBoard[2][j] == '1' and self.gameBoard[3][j] == '1'):
-                    self.player1Score += 1
-            except:
-                print(j)
-                print(len(self.gameBoard))
-                print(len(self.gameBoard[0]))
+            if (self.gameBoard[0][j] == '1' and self.gameBoard[1][j] == '1' and
+                    self.gameBoard[2][j] == '1' and self.gameBoard[3][j] == '1'):
+                self.player1Score += 1
             if (self.gameBoard[1][j] == '1' and self.gameBoard[2][j] == '1' and
                     self.gameBoard[3][j] == '1' and self.gameBoard[4][j] == '1'):
                 self.player1Score += 1

@@ -7,6 +7,7 @@ from engine import Engine
 
 visited = set()
 
+
 # Handles the arguments given
 def handle_args():
     # Ensures correct number of arguments
@@ -54,50 +55,9 @@ def createBoard(layout, player):
         return Board(contents[:-1], player)
 
 
-# Helper function for generate Possible Turns
-#   Determines lowest available slot for piece drop
-def drop(column):
-    for i in range(5, -1, -1):
-        if column[i] == '0':
-            return i
-    return None
-
-
-# Given a board, generates all possible turns
-def generatePossibleTurns(player, board):
-    output = []
-    for i in range(7):
-        j = drop([board[0][i], board[1][i], board[2][i], board[3][i], board[4][i], board[5][i]])
-        if j is None:
-            continue
-        else:
-            temp = [list(board[0]), list(board[1]), list(board[2]), list(board[3]), list(board[4]), list(board[5])]
-            temp[j][i] = player
-            for k in range(len(temp)):
-                temp[k] = "".join(temp[k])
-            output += [temp]
-    return output
-
-
-def generateTree(depth, state):
-    if depth == 0:
-        return None
-    for i in generatePossibleTurns(str((state.player % 2) + 1), state.board.gameBoard):
-        n = Node(Board(copy.deepcopy(i), (state.player % 2) + 1), (state.player % 2) + 1)
-
-        state.addChildren(n)
-        generateTree(depth - 1, n)
-    return state
-
-
-def initiate(board, startingPlayer, maxDepth):
-    iRoot = generateTree(maxDepth, Node(board, startingPlayer))
-    return iRoot
-
-
 if __name__ == '__main__':
     # args = handle_args()
-    args = ["interactive", "input1.txt", "human-next", "5"]
+    args = ["interactive", "input1.txt", "human-next", "3"]
     if args[0].upper() == "INTERACTIVE":
         args[0] = True
     else:
@@ -108,5 +68,6 @@ if __name__ == '__main__':
         args[2] = 2
     b = createBoard(args[1], args[2])
     e = Engine(b, int(args[3]), args[2], args[0])
-    #root = initiate(b, args[2], int(args[3]))
+    e.playGame()
+    # root = initiate(b, args[2], int(args[3]))
     print("Program ran successfully")

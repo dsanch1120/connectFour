@@ -1,6 +1,7 @@
 from node import Node
 from board import Board
 from computerPlayer import ComputerPlayer as cp
+from humanPlayer import HumanPlayer as hp
 import copy
 
 class Engine:
@@ -16,10 +17,14 @@ class Engine:
     def playGame(self):
         players = []
         if self.player == 1:
-            players = []
-        while turns != 42:
+            players = [cp(2), hp(1)]
+        else:
+            players = [hp(2), cp(1)]
+        while self.turns != 42:
+            self.b.updateBoard(players[self.player].move(self.MAX_DEPTH, self.root,self.player)[1], chr(self.player + 1))
 
-            turns += 1
+            self.player = ((self.player + 1) % 2)
+            self.turns += 1
 
     #   Determines lowest available slot for piece drop
     def drop(self, column):
