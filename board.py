@@ -8,11 +8,18 @@ class Board:
         self.getPlayerScore()
         self.score = self.getScore()
 
+    # Calls all functions to update scores
+    def updateScores(self):
+        self.getPlayerScore()
+        self.score = self.getScore()
+
     # Given a move, updates the board
     def updateBoard(self, move, piece):
         for i in range(5, -1, -1):
-            if self.gameBoard[i][move] == '0':
+            if self.gameBoard[i][move-1] == '0':
                 self.gameBoard[i] = self.gameBoard[i][:move-1] + piece + self.gameBoard[i][move:]
+                self.updateScores()
+                return self.gameBoard
 
     # Checks number of free spaces around a given location
     def freeSpaces(self, x, y):
@@ -69,6 +76,8 @@ class Board:
 
     # Gets the player's score of the board
     def getPlayerScore(self):
+        self.player1Score = 0
+        self.player2Score = 0
         # Check horizontally
         for row in self.gameBoard:
             # Check player 1

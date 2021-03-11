@@ -9,7 +9,16 @@ class ComputerPlayer:
         if player == 1:
             self.max = True
 
+    def display(self, tree):
+        print("\nComputer Turn")
+        for i in tree.board.gameBoard:
+            print(i)
+
     def move(self, depth, tree, isMax):
+        return self.minimax(depth, tree, isMax)
+
+    def minimax(self, depth, tree, isMax):
+        global bestMove
         if isMax == 0:
             isMax = True
         else:
@@ -21,7 +30,7 @@ class ComputerPlayer:
         if isMax:
             bestVal = -1000000
             for i in tree.children:
-                value = self.move(depth - 1, i, False)[0]
+                value = self.minimax(depth - 1, i, False)[0]
                 bestVal = max(bestVal, value)
                 if bestVal == value:
                     bestMove = i.move
@@ -30,7 +39,7 @@ class ComputerPlayer:
         else:
             bestVal = 1000000
             for i in tree.children:
-                value = self.move(depth - 1, i, True)[0]
+                value = self.minimax(depth - 1, i, True)[0]
                 bestVal = min(bestVal, value)
                 if bestVal == value:
                     bestMove = i.move

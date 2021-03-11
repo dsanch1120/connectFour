@@ -5,7 +5,7 @@ from board import Board
 from node import Node
 from engine import Engine
 
-visited = set()
+first = 1
 
 
 # Handles the arguments given
@@ -52,22 +52,27 @@ def createBoard(layout, player):
         contents = f.readlines()
         for i in range(len(contents)):
             contents[i] = contents[i][:-1]
+        first = int(contents[-1][:-1])
         return Board(contents[:-1], player)
 
 
 if __name__ == '__main__':
     # args = handle_args()
-    args = ["interactive", "input1.txt", "human-next", "3"]
+    args = ["one-move", "input1.txt", "computer-next", "5"]
     if args[0].upper() == "INTERACTIVE":
         args[0] = True
     else:
         args[0] = False
+    b = createBoard(args[1], first)
     if args[2].upper() == "HUMAN-NEXT":
         args[2] = 1
-    else:
+        e = Engine(b, int(args[3]), args[2], args[0])
+    elif args[2].upper() == "COMPUTER-NEXT":
         args[2] = 2
-    b = createBoard(args[1], args[2])
-    e = Engine(b, int(args[3]), args[2], args[0])
+        e = Engine(b, int(args[3]), args[2], args[0])
+    else:
+        e = Engine(b, int(args[3]), first, args[0], args[2][:-1])
+
     e.playGame()
     # root = initiate(b, args[2], int(args[3]))
     print("Program ran successfully")
