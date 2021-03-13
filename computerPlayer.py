@@ -6,6 +6,7 @@ class ComputerPlayer:
     def __init__(self, player):
         self.player = player
         self.max = False
+        self.human = False
         if player == 1:
             self.max = True
 

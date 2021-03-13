@@ -58,7 +58,7 @@ def createBoard(layout, player):
 
 if __name__ == '__main__':
     # args = handle_args()
-    args = ["one-move", "input1.txt", "computer-next", "5"]
+    args = ["interactive", "input1.txt", "computer-next", "5"]
     if args[0].upper() == "INTERACTIVE":
         args[0] = True
     else:

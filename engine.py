@@ -38,15 +38,23 @@ class Engine:
                     break
                 else:
                     print("Bad Input: Column Full")
-            self.b.gameBoard = copy.deepcopy(self.b.updateBoard(m, str(self.player + 1)))
+
+            for i in self.root.children:
+                if m == i.move:
+                    self.root = copy.deepcopy(i)
+            #self.b.gameBoard = self.root.board
+            self.b = self.root.board
+            # self.b.gameBoard = copy.deepcopy(self.b.updateBoard(m, str(self.player + 1)))
             self.b.getPlayerScore()
             self.player = ((self.player + 1) % 2)
+
             self.root = self.generateTree(self.MAX_DEPTH, Node(self.b, self.player, self.root.move))
             self.turns += 1
         self.determineWinner()
 
     def playOneMove(self):
         print("One move")
+
 
     # Based upon player scores, determines the winner of the game
     def determineWinner(self):
@@ -57,7 +65,7 @@ class Engine:
 
         else:
             print("\n\n***************************************")
-            print("**** Player 2 wins with score of %d ****" % self.b.player1Score)
+            print("**** Player 2 wins with score of %d ****" % self.b.player2Score)
             print("***************************************")
 
     # Determines lowest available slot for piece drop
@@ -87,10 +95,14 @@ class Engine:
     def generateTree(self, depth, state):
         if depth == 0:
             return None
-        for i in self.generatePossibleTurns(str((state.player % 2) + 1), state.board.gameBoard):
-            n = Node(Board(copy.deepcopy(i[0]), (state.player % 2) + 1), (state.player % 2) + 1, i[1])
-            state.addChildren(n)
-            self.generateTree(depth - 1, n)
+        if depth != 0 and len(state.children) == 0:
+            for i in self.generatePossibleTurns(str((state.player % 2) + 1), state.board.gameBoard):
+                n = Node(Board(copy.deepcopy(i[0]), (state.player % 2) + 1), (state.player % 2) + 1, i[1])
+                state.addChildren(n)
+                self.generateTree(depth - 1, n)
+        else:
+            for i in range(len(state.children)):
+                self.generateTree(depth - 1, state.children[i])
         return state
 
     def initiate(self, board, startingPlayer, maxDepth):
